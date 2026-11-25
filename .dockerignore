@@ -1,0 +1,28 @@
+# Контекст сборки. В образ копируются только backend/requirements.txt,
+# backend/alembic.ini, backend/alembic, backend/app и entrypoint.prod.sh
+# (см. Dockerfile). Остальное исключаем: меньше лишнего и никаких секретов.
+
+# Git и служебные папки редакторов
+.git
+.claude
+.vscode
+.idea
+
+# Виртуальные окружения и кэши Python и инструментов
+**/.venv
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+
+# Секреты и локальные настройки; шаблоны .env.example — можно
+**/.env
+**/.env.*
+!**/.env.example
+
+# Не нужно для запуска приложения
+deploy/
+demo/
+DEPLOY.md
+backend/requirements-dev.txt

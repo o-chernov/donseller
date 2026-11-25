@@ -1,0 +1,25 @@
+# Веб-фреймворк и сервер
+fastapi==0.143.0
+uvicorn[standard]==0.54.0       # uvloop и httptools на Linux, быстрый --reload
+
+# Настройки и валидация
+pydantic-settings==2.15.0       # конфиг из .env
+email-validator==2.3.0          # нужен для EmailStr
+
+# База данных
+sqlalchemy[asyncio]==2.1.4      # [asyncio] ставит greenlet, без него async-движок не работает
+asyncpg==0.32.0                 # асинхронный драйвер PostgreSQL
+alembic==1.20.0                 # миграции
+uuid6==2025.0.1                 # uuid7() для первичных ключей; в Python 3.14 он есть в stdlib
+
+# Безопасность
+pyjwt==2.15.1                   # access-токен; HS256, поэтому без [crypto]
+pwdlib[argon2]==0.3.1           # хеширование паролей Argon2
+
+# Фоновые задачи через RabbitMQ (подтверждение email)
+celery==5.6.3                   # тянет kombu и amqp — это и есть клиент RabbitMQ
+# UI
+jinja2==3.1.6
+
+# aiofiles — это сторонняя библиотека для Python, которая обеспечивает асинхронный (неблокирующий) доступ к файловой системе для приложений на базе модуля asyncio
+aiofiles==25.1.0

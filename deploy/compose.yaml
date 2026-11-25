@@ -1,0 +1,48 @@
+# Продовый compose Donseller. На сервере лежит как /srv/projects/donseller/compose.yaml,
+# рядом — .env (root, 600). Образ задаётся только через DONSELLER_IMAGE в .env:
+# сейчас это локальный тег donseller:<дата>, позже — образ из ghcr.io (CI/CD).
+name: donseller
+
+services:
+  app:
+    image: ${DONSELLER_IMAGE:?set DONSELLER_IMAGE in .env}
+    restart: unless-stopped
+
+    # Переменные приложения. На сервере .env — root 600; файлом в контейнер НЕ монтируем
+    env_file: .env
+
+    # Только localhost: снаружи приложение доступно через nginx
+    ports:
+      - "127.0.0.1:8001:8000"
+
+    # default — публикация порта и выход в интернет, db — сеть общей базы PostgreSQL
+    networks: [default, db]
+
+    # Ограничения безопасности: без повышения привилегий и без capabilities,
+    # файловая система только для чтения (приложение ничего не пишет на диск),
+    # /tmp — в памяти
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+
+    # Маленький init-процесс: передаёт сигналы остановки и убирает зомби-процессы
+    init: true
+
+    # Потолок памяти: сервер небольшой, утечка в приложении не должна задеть базу
+    mem_limit: 512m
+
+    # Проверка здоровья через /health (он проверяет и базу).
+    # В slim-образе нет curl, поэтому запрос делаем через python
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+networks:
+  # Сеть базы создана на сервере заранее. Она внутренняя: интернета в ней нет
+  db:
+    name: db-donseller
+    external: true

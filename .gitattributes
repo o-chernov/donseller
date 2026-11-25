@@ -1,0 +1,19 @@
+# Переводы строк: в репозитории, в рабочей копии и в архиве git archive — только LF.
+# Без этого git archive на Windows (core.autocrlf=true) отдаёт файлы с CRLF,
+# и entrypoint.prod.sh в контейнере не запустится.
+* text=auto eol=lf
+
+# Файлы, которые выполняются или читаются на Linux-сервере, — всегда текст с LF
+*.sh       text eol=lf
+Dockerfile text eol=lf
+*.yaml     text eol=lf
+*.yml      text eol=lf
+*.conf     text eol=lf
+
+# Картинки — без преобразований
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
