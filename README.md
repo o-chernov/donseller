@@ -7,6 +7,12 @@
 - `backend/` — приложение на FastAPI: PostgreSQL, SQLAlchemy, Alembic, шаблоны Jinja2.
 - `Dockerfile`, `entrypoint.prod.sh` — образ приложения.
 - `deploy/` — продовый compose, конфиг nginx и шаблон переменных окружения.
+- `.github/workflows/ci-cd.yml` — сборка образа и выкладка на сервер.
+
+## Ветки
+
+- `dev` — разработка. На каждый push GitHub Actions собирает образ, чтобы проверить сборку.
+- `main` — выпуск. Образ собирается, публикуется в GitHub Container Registry и выкатывается на сервер.
 
 ## Лицензия
 
