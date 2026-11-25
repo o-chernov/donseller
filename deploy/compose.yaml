@@ -1,12 +1,17 @@
 # Продовый compose Donseller. На сервере лежит как /srv/projects/donseller/compose.yaml,
 # рядом — .env (root, 600). Образ задаётся только через DONSELLER_IMAGE в .env:
-# сейчас это локальный тег donseller:<дата>, позже — образ из ghcr.io (CI/CD).
+# при автодеплое его выставляет deploy-project на сервере (образ из ghcr.io),
+# при ручной сборке — тег donseller:<дата>. Сам этот файл CI на сервере не меняет.
 name: donseller
 
 services:
   app:
     image: ${DONSELLER_IMAGE:?set DONSELLER_IMAGE in .env}
     restart: unless-stopped
+
+    # Пользователя задаёт compose (его пишет root), а не образ: даже собранный
+    # с ошибкой или подменённый образ не запустится от root внутри контейнера
+    user: "10001:10001"
 
     # Переменные приложения. На сервере .env — root 600; файлом в контейнер НЕ монтируем
     env_file: .env
@@ -40,6 +45,8 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
+      # В первые 30 с проверка каждые 2 с: при деплое сервер быстрее видит healthy
+      start_interval: 2s
 
 networks:
   # Сеть базы создана на сервере заранее. Она внутренняя: интернета в ней нет

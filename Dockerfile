@@ -1,9 +1,10 @@
 # Образ Donseller: FastAPI + uvicorn в одном процессе.
-# Собирается на сервере из архива коммита (см. DEPLOY.md), позже — в GitHub Actions.
+# Собирает GitHub Actions (.github/workflows/ci-cd.yml); запасной путь —
+# сборка на сервере из архива коммита (см. DEPLOY.md).
 
 # Python 3.13, как в разработке, на Debian 13 (trixie), вариант slim.
 # Минорная версия Python и релиз Debian закреплены. Исправления безопасности
-# базового образа приходят при сборке с --pull (так в DEPLOY.md).
+# базового образа приходят при сборке с --pull (pull: true в CI, --pull в DEPLOY.md).
 FROM python:3.13-slim-trixie
 
 # Без .pyc на диске (в контейнере файловая система только для чтения),
