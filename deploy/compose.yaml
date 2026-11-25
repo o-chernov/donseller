@@ -1,7 +1,7 @@
-# Продовый compose Donseller. На сервере лежит как /srv/projects/donseller/compose.yaml,
-# рядом — .env (root, 600). Образ задаётся только через DONSELLER_IMAGE в .env:
-# при автодеплое его выставляет deploy-project на сервере (образ из ghcr.io),
-# при ручной сборке — тег donseller:<дата>. Сам этот файл CI на сервере не меняет.
+# Продовый compose Donseller. Рядом с ним на сервере — .env, доступный только root.
+# Образ задаётся только через DONSELLER_IMAGE в .env: при автодеплое его выставляет
+# сервер (образ из ghcr.io), при ручной сборке — тег donseller:<дата>.
+# Сам этот файл CI на сервере не меняет.
 name: donseller
 
 services:
